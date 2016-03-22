@@ -1,5 +1,6 @@
 library('MVA')
 demo("Ch-MVA") # generate data
+demo('Ch-Viz')
 
 mlab <- "Manufacturing enterprises with 20 or more workers"
 plab <- "Population size (1970 census) in thousands"
@@ -52,4 +53,29 @@ with(USairpollution, plot(manu, popul,
 with(USairpollution, chiplot(manu, popul))
 
 
+## 泡泡图
+par(mfrow=c(1,1))
+ylim <- with(USairpollution, range(wind)) * c(0.95, 1)
+plot(wind ~ temp, data = USairpollution,
+     xlab = "Average annual temperature (Fahrenheit)",
+     ylab = "Average annual wind speed (m.p.h.)", pch = 10,
+     ylim = ylim)
+with(USairpollution, symbols(temp, wind, circles = SO2, inches = 0.5, add = TRUE))
 
+# 太多维度，没有意义，模式很难发现
+plot(wind ~ temp, data = USairpollution,
+     xlab = "Average annual temperature (Fahrenheit)",
+     ylab = "Average annual wind speed (m.p.h.)", pch = 10,
+     ylim = ylim)
+with(USairpollution,
+     stars(USairpollution[,-c(2,5)], locations = cbind(temp, wind),
+     labels = NULL, add = TRUE, cex = 0.5))
+
+# 组合闪点图
+pairs(USairpollution, pch = ".", cex = 1.5)
+round(cor(USairpollution),4)
+pairs(USairpollution,
+      panel = function (x, y, ...) {
+        points(x, y, ...)
+        abline(lm(y ~ x), col = "grey")
+      }, pch = ".", cex = 1.5)
