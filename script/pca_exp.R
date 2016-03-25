@@ -20,7 +20,7 @@ plot(data$x1, data$x2)
 derive_data <- cbind(data,
                      x4=10*jitter(data$x1), 
                      x5=jitter(data$x2+0.6*data$x3),
-                     x6=12*jitter(data$x1),
+                     x6=12*jitter(data$x1+data$x2),
                      x7=16*jitter(data$x1),
                      x8=7*jitter(data$x1))
 cor(derive_data)
@@ -54,8 +54,18 @@ m3 <- princomp(scale_data)
 summary(m3)
 plot(m3)
 
-# 方法4 标准正规化
+# 方法4 只计算衍生数据的主成份
+only_derive_data <- scale_data[,4:8]
+m4 <- princomp(only_derive_data)
+plot(m4)
+summary(m4)
+
+# 方法5 只计算衍生数据，使用相关系数
+m5 <- princomp(covmat = cor(derive_data[,4:8]))
+plot(m5)
+summary(m5)
 
 
-
-
+# 据网上问下，当scale是正规化时，correlation与normal等价
+# https://www.researchgate.net/post/What_is_the_best_way_to_scale_parameters_before_running_a_Principal_Component_Analysis_PCA
+# 方法6 比较先正规化，在pca和直接pca cor的效果，应该一样，还有减去平均值。
